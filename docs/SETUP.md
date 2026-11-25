@@ -41,19 +41,28 @@ Bot cần 2 nguồn cấu hình: **Telegram** (bot + chat nhận cảnh báo) v�
 
 Bot dùng **Threads API chính thức** của Meta (miễn phí, giới hạn 2.200 query keyword search/24h).
 
-### B1. Tạo Meta app
+### B1. Tạo Meta app (giao diện Use cases mới của Meta)
 
-1. Vào [developers.facebook.com/apps](https://developers.facebook.com/apps) → **Create app**.
-2. Chọn use case **Threads** (nếu trình tạo app hỏi) — app sẽ có **2 App ID/Secret** (Facebook và Threads). Với Threads API, dùng **Threads App ID** và **Threads App Secret** (xem ở *App settings → Basic*).
-3. Trong *App settings → Basic*: thêm **Privacy Policy URL** (có thể dùng URL bất kỳ công khai, VD link GitHub Pages) — cần để nộp App Review và chuyển app sang Live.
+1. Trước tiên cần **đăng ký tài khoản developer** (nếu chưa): vào [developers.facebook.com](https://developers.facebook.com), đăng nhập Facebook, xác minh email/SĐT khi được yêu cầu.
+2. Vào [developers.facebook.com/apps](https://developers.facebook.com/apps) → bấm **Create app**.
+3. Màn hình tạo app mới sẽ hỏi mục đích/use case — tìm và chọn **Threads** ("Access the Threads API").
+   > **Nếu không thấy mục Threads:** cứ chọn đại loại app (VD *Business* hoặc *Something else*)
+   > để tạo xong app, sau đó vào trong app → menu trái **Use cases** → **Add use case** → chọn
+   > **Access the Threads API**.
+4. Vào use case Threads vừa thêm → **Customize** → bấm **Add** bên cạnh các quyền cần dùng:
+   - `threads_basic` (bắt buộc, có sẵn)
+   - `threads_read_replies`
+   - `threads_keyword_search` ← **quyền quan trọng nhất cho bot này**
+5. Menu trái **Settings** (trong use case Threads): lấy **Threads App ID** và **Threads App Secret**;
+   điền **Client OAuth Settings** (valid OAuth redirect URI, VD `https://localhost/`) → Save.
 
 ### B2. Thêm chính bạn làm Threads Tester
 
-App ở chế độ *Development* thì tester được cấp quyền ngay (không cần chờ App Review) — dùng cho giai đoạn chạy thử.
-
-1. App Dashboard → **App roles** → **Roles** → bấm **Add People** → chọn **Threads Tester**.
-2. Nhập username Threads của bạn và gửi lời mời.
+1. Trong use case Threads → **Settings** → bấm **"Add or Remove Threads Test Users"** — trang sẽ nhảy sang **App roles → Roles**.
+2. Bấm **Add People** → chọn vai trò **Threads Tester** → nhập username Threads của bạn → gửi lời mời.
 3. Mở [threads.com/settings/account](https://www.threads.com/settings/account) → mục **Website permissions** → **Accept** lời mời.
+
+> App ở chế độ Development thì tester được cấp quyền ngay, không cần chờ App Review — đủ để chạy thử pipeline (search sẽ chỉ tìm bài của chính bạn cho tới khi App Review duyệt).
 
 ### B3. Lấy Threads access token
 
@@ -99,10 +108,10 @@ Lưu `access_token` trả về — dùng cho `.env` (giá trị `THREADS_ACCESS_
 > ⚠️ **Quan trọng:** khi chưa được duyệt, API keyword search **chỉ trả bài của chính tài khoản
 > đang cấp token**. Muốn quét toàn Threads thì bắt buộc phải qua bước này (thường mất vài ngày).
 
-1. App Dashboard → **App Review** → **Permissions and Features** → tìm **threads_keyword_search** → **Request**.
+1. Trong use case Threads → mục **App Review** → tìm **threads_keyword_search** → bấm **Request/Submit**.
 2. Mô tả use case trung thực, VD: *"App theo dõi bài viết công khai theo từ khóa để gửi cảnh báo cho chính chủ sở hữu tài khoản (không đăng bài thay mặt người dùng, không hiển thị nội dung người khác)."*
 3. Meta có thể yêu cầu video demo — quay màn hình bot đang search từ khóa và hiển thị kết quả.
-4. Sau khi duyệt: chuyển app sang **Live** (*App Dashboard → App Mode → Live*) để permission có hiệu lực với mọi user (với chính bạn thì không cần chờ Live).
+4. Trước khi Publish, app cần đủ asset: **App icon** (512x512+ px), **Privacy Policy URL**, **Data deletion URL** (mục **Publish** trong use case sẽ liệt kê yêu cầu còn thiếu). Sau khi được duyệt → bấm **Publish**.
 
 ---
 
