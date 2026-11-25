@@ -73,6 +73,11 @@ class TelegramNotifier:
     async def aclose(self) -> None:
         await self._bot.shutdown()
 
+    @property
+    def chat_id(self) -> str:
+        """Chat ID nhan canh bao (dung khi luu tin nhan gui loi)."""
+        return self._chat_id
+
     async def send(
         self,
         text: str,
