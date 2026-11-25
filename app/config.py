@@ -2,6 +2,7 @@
 
 from pathlib import Path
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -21,6 +22,7 @@ class Settings(BaseSettings):
 
     # Threads Graph API
     threads_access_token: str = ""
+    threads_app_secret: str = ""
 
     # Telegram
     telegram_bot_token: str = ""
@@ -32,6 +34,14 @@ class Settings(BaseSettings):
     # Duong dan
     data_dir: Path = PROJECT_ROOT / "data"
     keywords_path: Path = PROJECT_ROOT / "keywords.json"
+
+    @field_validator("poll_interval_minutes", mode="before")
+    @classmethod
+    def _blank_interval_to_none(cls, value: object) -> object:
+        """Bien ``POLL_INTERVAL_MINUTES=`` (chuoi rong trong .env) thanh None."""
+        if isinstance(value, str) and value.strip() == "":
+            return None
+        return value
 
     def validate_tokens(self) -> list[str]:
         """Tra ve danh sach thieu sot cau hinh (rỗng = hop le)."""

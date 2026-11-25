@@ -19,3 +19,13 @@ def test_validate_tokens_returns_empty_when_complete():
         telegram_chat_id="c",
     )
     assert settings.validate_tokens() == []
+
+
+def test_blank_poll_interval_becomes_none():
+    settings = Settings(_env_file=None, poll_interval_minutes="")
+    assert settings.poll_interval_minutes is None
+
+
+def test_poll_interval_parses_integer():
+    settings = Settings(_env_file=None, poll_interval_minutes="7")
+    assert settings.poll_interval_minutes == 7

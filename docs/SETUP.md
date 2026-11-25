@@ -97,11 +97,13 @@ curl -X POST https://graph.threads.com/oauth/access_token \
 
 ### B4. Đổi sang long-lived token (60 ngày)
 
+Dùng endpoint `/access_token` (không phải `/oauth/access_token`) và **bắt buộc có `client_id`**:
+
 ```bash
-curl -X GET "https://graph.threads.com/oauth/access_token?grant_type=th_exchange_token&client_secret=<THREADS_APP_SECRET>&access_token=<TOKEN_NGAN_HAN>"
+curl -X GET "https://graph.threads.com/access_token?grant_type=th_exchange_token&client_id=<THREADS_APP_ID>&client_secret=<THREADS_APP_SECRET>&access_token=<TOKEN_NGAN_HAN>"
 ```
 
-Lưu `access_token` trả về — dùng cho `.env` (giá trị `THREADS_ACCESS_TOKEN`).
+Kết quả trả về gồm `access_token` và `expires_in` (≈ 5.183.649 giây = 60 ngày). Lưu `access_token` — dùng cho `.env` (giá trị `THREADS_ACCESS_TOKEN`).
 
 ### B5. Nộp App Review cho `threads_keyword_search`
 
