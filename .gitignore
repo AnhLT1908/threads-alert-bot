@@ -6,6 +6,10 @@ data/
 *.db
 *.db-journal
 
+# Script chay local + log cua bot
+run_bot.bat
+bot.log
+
 # Python
 __pycache__/
 *.py[cod]
